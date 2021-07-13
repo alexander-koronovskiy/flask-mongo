@@ -11,15 +11,16 @@ def get_outside_rates(url: str, keyword: str) -> json:
 
 # создание
 client = MongoClient("mongodb://localhost:27017/")
-db = client["organisation"]
-
+db = client["rates"]
 
 # запись тестовых данных в бд
-col = db["developers"]
-developer = {"name": "Lini", "address": "Sweden"}
-col.insert_one(developer)
-for row in client.list_databases():
+col = db["rates"]
+rates = get_outside_rates("https://www.cbr-xml-daily.ru/latest.js", "rates")
+col.insert_one(rates)
+
+# принт данных из бд
+for row in db.rates.find():
     print(row)
 
-# вывод из бд по наименованию валюты
-# перезапись бд при перезагрузки приложения
+# очистка бд при перезагрузки приложения
+# db.rates.remove()
