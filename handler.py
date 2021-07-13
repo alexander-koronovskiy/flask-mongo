@@ -9,6 +9,10 @@ def get_outside_rates(url: str, keyword: str) -> json:
     return requests.get(url).json()[keyword]
 
 
+def get_outside_rates_old(url: str) -> json:
+    return requests.get(url).json()
+
+
 # создание
 client = MongoClient("mongodb://localhost:27017/")
 db = client["rates"]
