@@ -1,7 +1,7 @@
-from handler import get_outside_rates
+from handler import get_outside_rates_old
 
 
-def test_get_outside_rates():
-    rates = get_outside_rates("https://www.cbr-xml-daily.ru/latest.js", "rates")
+def test_get_outside_rates_old():
+    rates = get_outside_rates_old("https://www.cbr-xml-daily.ru/latest.js")["rates"]
     for key in rates:
         assert key, rates[key]
