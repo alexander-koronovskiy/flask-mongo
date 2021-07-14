@@ -20,12 +20,3 @@ def record_outside_rates(url: str, keyword: str):
     rates = requests.get(url).json()[keyword]
     col.insert_one(rates)
     return rates
-
-
-# remove previous record
-# print(db_conn("rates").rates.remove())
-
-# printing records from db
-rates = record_outside_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
-for row in db_conn('rates').rates.find():
-    print(row)
