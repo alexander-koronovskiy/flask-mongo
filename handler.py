@@ -1,11 +1,8 @@
 import json
 
 import requests
+from jsonschema import validate
 from pymongo import MongoClient, database
-
-
-def get_outside_rates_old(url: str) -> json:
-    return requests.get(url).json()
 
 
 # db connection
@@ -14,9 +11,35 @@ def db_conn(col: str) -> database:
     return client[col]
 
 
+# not ready yet
+def read_rates():
+    pass
+
+
 # rates recording from outside api to db
-def record_outside_rates(url: str, keyword: str):
+def update_rates(url: str, keyword: str) -> json:
     col = db_conn('rates')['rates']
     rates = requests.get(url).json()[keyword]
     col.insert_one(rates)
     return rates
+
+
+# expected json schema example
+schema = {
+    'type': 'object',
+    'properties': {
+        'description': {'type': 'string'},
+        'status': {'type': 'boolean'},
+        'value_a': {'type': 'number'},
+        'value_b': {'type': 'number'},
+    },
+}
+
+temp_data = '{"description": "Hello world!", "status": true, "value_a": 1, "value_b": 3.14}'
+
+
+# try to validate and send to client temporary json
+def post_json_to_client(row: json) -> json:
+    my_json = json.loads(row)
+    validate(instance=my_json, schema=schema)
+    return my_json
