@@ -1,19 +1,30 @@
+import json
+
 from flask import Flask
+from jsonschema import validate
 
 from handler import db_conn, record_outside_rates
 
 app = Flask(__name__)
 
+# expected json
+schema = {
+    'type': 'object',
+    'properties': {
+        'description': {'type': 'string'},
+        'status': {'type': 'boolean'},
+        'value_a': {'type': 'number'},
+        'value_b': {'type': 'number'},
+    },
+}
+
 
 @app.route('/')
 def index():
-    return 'hello'
+    my_json = json.loads('{"description": "Hello world!", "status": true, "value_a": 1, "value_b": 3.14}')
+    validate(instance=my_json, schema=schema)
+    return my_json
 
 
 if __name__ == '__main__':
-    # remove previous record
-    db_conn('rates').rates.remove()  # refract remove() to another method
-
-    # printing records from db
-    rates = record_outside_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # use kw in func ???
-    print(db_conn('rates').rates.find_one())
+    app.run(debug=True)
