@@ -11,9 +11,9 @@ def db_conn(col: str) -> database:
     return client[col]
 
 
-# not ready yet
-def read_rates():
-    pass
+# read and operate by query
+def cursor_rates():
+    return db_conn('rates')['rates']
 
 
 # rates recording from outside api to db
@@ -21,7 +21,14 @@ def update_rates(url: str, keyword: str) -> json:
     col = db_conn('rates')['rates']
     rates = requests.get(url).json()[keyword]
     col.insert_one(rates)
-    return rates
+
+
+# del last rates recording
+def del_rates():
+    pass
+
+
+# from api to client without db - emergency case
 
 
 # expected json schema example
