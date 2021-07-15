@@ -24,7 +24,9 @@ def update_rates(url: str, keyword: str) -> json:
 
 # del last rates recording
 def del_rates():
-    cursor_rates().delete_many({})
+    cursor_rates().delete_one({})
 
 
-# from api to client without db - emergency case realise
+# make jsonful check for this
+def emergency_rates_to_client():
+    return requests.get('https://www.cbr-xml-daily.ru/latest.js').json()['rates']

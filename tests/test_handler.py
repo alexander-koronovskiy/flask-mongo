@@ -1,5 +1,7 @@
 from handler import cursor_rates, db_conn, del_rates, update_rates
 
+PREV_COUNT = cursor_rates().count()
+
 
 def test_db_conn():
     assert db_conn('rates')
@@ -10,18 +12,10 @@ def test_cursor_rates():
 
 
 def test_update_rates():
-    before_upd_count = cursor_rates().count()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
-    after_upd_count = cursor_rates().count()
-    assert before_upd_count - after_upd_count
+    assert cursor_rates().find_one()
 
 
 def test_del_rates():
     del_rates()
-    assert not cursor_rates().count()
-
-
-# make jsonful check
-def test_jsonful_data_to_client():
-    import requests
-    assert requests.get('https://www.cbr-xml-daily.ru/latest.js').json()['rates']
+    assert PREV_COUNT == cursor_rates().count()  # original cond check

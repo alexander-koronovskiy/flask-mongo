@@ -1,5 +1,7 @@
 from flask import Flask
 
+from handler import emergency_rates_to_client
+
 app = Flask(__name__)
 
 
@@ -9,4 +11,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)  # it s just works with test json
+    print(emergency_rates_to_client())
+    app.run()
