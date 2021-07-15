@@ -1,4 +1,4 @@
-from handler import cursor_rates, db_conn, post_json_to_client, temp_data, update_rates
+from handler import cursor_rates, db_conn, del_rates, update_rates
 
 
 def test_db_conn():
@@ -6,8 +6,7 @@ def test_db_conn():
 
 
 def test_cursor_rates():
-    print(cursor_rates().find_one())  # use -s in pytest for  state check
-    assert cursor_rates()
+    assert cursor_rates()  # print .find_one() for pytest -s
 
 
 def test_update_rates():
@@ -17,5 +16,12 @@ def test_update_rates():
     assert before_upd_count - after_upd_count
 
 
-def test_post_json_to_client():
-    assert post_json_to_client(temp_data)
+def test_del_rates():
+    del_rates()
+    assert not cursor_rates().count()
+
+
+# make jsonful check
+def test_jsonful_data_to_client():
+    import requests
+    assert requests.get('https://www.cbr-xml-daily.ru/latest.js').json()['rates']

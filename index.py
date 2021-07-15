@@ -1,13 +1,11 @@
 from flask import Flask
 
-from handler import post_json_to_client, temp_data
-
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return post_json_to_client(temp_data)
+    return 'hello world'
 
 
 if __name__ == '__main__':

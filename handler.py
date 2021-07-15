@@ -1,7 +1,6 @@
 import json
 
 import requests
-from jsonschema import validate
 from pymongo import MongoClient, database
 
 
@@ -25,28 +24,7 @@ def update_rates(url: str, keyword: str) -> json:
 
 # del last rates recording
 def del_rates():
-    pass
+    cursor_rates().delete_many({})
 
 
-# from api to client without db - emergency case
-
-
-# expected json schema example
-schema = {
-    'type': 'object',
-    'properties': {
-        'description': {'type': 'string'},
-        'status': {'type': 'boolean'},
-        'value_a': {'type': 'number'},
-        'value_b': {'type': 'number'},
-    },
-}
-
-temp_data = '{"description": "Hello world!", "status": true, "value_a": 1, "value_b": 3.14}'
-
-
-# try to validate and send to client temporary json
-def post_json_to_client(row: json) -> json:
-    my_json = json.loads(row)
-    validate(instance=my_json, schema=schema)
-    return my_json
+# from api to client without db - emergency case realise
