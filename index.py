@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from handler import cursor_rates, del_rates, update_rates
 
@@ -12,6 +12,11 @@ def index():
     del_rates()
     del rates['_id']
     return rates
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
