@@ -19,7 +19,9 @@ def index():
 
 @app.route('/<rate_key>')  # need error handler
 def user_view(rate_key):
-    return rate_key
+    rates = cursor_rates().find_one()
+    del rates['_id']
+    return rates
 
 
 @app.errorhandler(404)
