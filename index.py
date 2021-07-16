@@ -1,9 +1,9 @@
 import traceback
 from datetime import datetime
 
-from flask import Flask, render_template
+from flask import Flask
 
-from handler import cursor_rates, del_rates, update_rates
+from db_handler import cursor_rates, del_rates, update_rates
 
 app = Flask(__name__)
 
@@ -20,7 +20,8 @@ def index():
 @app.errorhandler(404)
 def page_not_found(e):
     full_trace = str(traceback.format_exc())
-    return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'), 'level': 'error', 'traceback': full_trace}, 404
+    return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+            'level': 'error', 'traceback': full_trace}, 404
 
 
 if __name__ == '__main__':
