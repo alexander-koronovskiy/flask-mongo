@@ -10,11 +10,16 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
     rates = cursor_rates().find_one()
-    del_rates()
     del rates['_id']
     return rates
+
+
+@app.route('/<rate_key>')  # need error handler
+def user_view(rate_key):
+    return rate_key
 
 
 @app.errorhandler(404)
@@ -25,4 +30,4 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    app.run()  # add min error handler for index (?)
+    app.run()
