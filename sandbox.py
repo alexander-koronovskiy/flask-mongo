@@ -1,21 +1,8 @@
-import logging
+import traceback
+from datetime import datetime
 
-
-def base_error_log_record_example():
-    logging.basicConfig(filename='sample.log', level=logging.INFO)
-    log = logging.getLogger('ex')
-
-    try:
-        raise RuntimeError
-    except RuntimeError:
-        log.exception('Error!')
-
-
-def base_success_log_record_example():
-    logging.basicConfig(filename='sample.log', level=logging.INFO)
-    logging.info('Program started')
-    result = 7 + 8
-    logging.info('Done!')
-
-
-base_error_log_record_example()
+try:
+    print(6 / 0)
+except ZeroDivisionError:
+    fullTraceback = str(traceback.format_exc())
+    print({'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'), 'level': 'error', 'traceback': fullTraceback})
