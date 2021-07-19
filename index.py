@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import Flask
 
+from client_handler import json_handler
 from db_handler import cursor_rates, del_rates, update_rates
 
 app = Flask(__name__)
@@ -13,15 +14,13 @@ app = Flask(__name__)
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
-    rates = cursor_rates().find_one()
-    del rates['_id']  # handle json data here, serialize ObjectId, add {"RUB": 1}
+    rates = json_handler(cursor_rates().find_one())
     return rates
 
 
 @app.route('/<rate_key>')  # realise /<from>/<to> case
 def rate_view(rate_key):
-    rates = cursor_rates().find_one()
-    del rates['_id']
+    rates = json_handler(cursor_rates().find_one())
     if rate_key in rates:
 
         return {

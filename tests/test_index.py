@@ -11,7 +11,7 @@ def test_page_not_found():
 
 def test_rate_view_valid_key():
     rate_key = 'EUR'
-    assert requests.get(f'http://127.0.0.1:5000/{rate_key}').json()[rate_key]
+    assert requests.get(f'http://127.0.0.1:5000/{rate_key}').json()['value']
 
 
 def test_rate_view_invalid_key():
