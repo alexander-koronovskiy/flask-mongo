@@ -29,7 +29,8 @@ def rate_view(from_rate_key, to_rate_key):
                 'rates': {'from': from_rate_key, 'to': to_rate_key, 'value': rates[to_rate_key] / rates[from_rate_key]}
                 }
     else:
-        return {'invalid_data': ''}  # raise here some exception for example, and handle it
+        return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                'response': 404, 'traceback': 'Invalid rates name to convert'}, 404
 
 
 @app.errorhandler(404)
