@@ -10,7 +10,6 @@ app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/RUB')
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
@@ -18,19 +17,22 @@ def index():
     return rates
 
 
-@app.route('/<rate_key>')  # realise /<from>/<to> case
-def rate_view(rate_key):
+# realise rates to_rate_key
+
+
+@app.route('/<from_rate_key>/<to_rate_key>')
+def rate_view(from_rate_key, to_rate_key):
     rates = json_handler(cursor_rates().find_one())
-    if rate_key in rates:
+    if from_rate_key and to_rate_key in rates:
 
         return {
-                    'from': rate_key,
-                    'to': 'RUB',
-                    'value': rates[rate_key]
+                    'from': from_rate_key,
+                    'to': to_rate_key,
+                    'value': rates[to_rate_key] / rates[from_rate_key]
         }
 
     else:
-        return {rate_key: ''}  # raise here some exception for example
+        return {'invalid_data': ''}  # raise here some exception for example
 
 
 @app.errorhandler(404)

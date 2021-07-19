@@ -1,9 +1,9 @@
 import json
 
 
-# handle json data here, serialize ObjectId, add {"RUB": 1}
 def json_handler(rates: json) -> json:
-    del rates['_id']
+    rates['_id'] = str(rates['_id'])  # is that correct serialization (?)
+    rates['RUB'] = 1
     return rates
 
 
