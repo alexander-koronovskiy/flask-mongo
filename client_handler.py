@@ -9,11 +9,9 @@ def json_handler(rates: json) -> json:
     return rates
 
 
-# i think this methods is excess, i m use code from methods in index file
-
 def error_response_handler():
     pass
 
 
-def correct_response_handler():
+def success_response_handler():
     pass

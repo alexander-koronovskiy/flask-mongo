@@ -9,15 +9,18 @@ from db_handler import cursor_rates, del_rates, update_rates
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/')  # need success response handle func here
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
     rates = json_handler(cursor_rates().find_one())
-    return rates
+    return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+            'response': 200,
+            'rates': rates
+            }
 
 
-@app.route('/<to_rate_key>')
+@app.route('/<to_rate_key>')  # need success response handle func here
 @app.route('/<to_rate_key>/')
 def rate_view(to_rate_key):
     rates = json_handler(cursor_rates().find_one())
@@ -30,7 +33,7 @@ def rate_view(to_rate_key):
         return abort(404)
 
 
-@app.route('/<from_rate_key>/<to_rate_key>')
+@app.route('/<from_rate_key>/<to_rate_key>')  # need another success response handle func here
 def rate_convert(from_rate_key, to_rate_key):
     rates = json_handler(cursor_rates().find_one())
     if from_rate_key and to_rate_key in rates:
@@ -43,7 +46,7 @@ def rate_convert(from_rate_key, to_rate_key):
         return abort(404)
 
 
-@app.errorhandler(404)
+@app.errorhandler(404)  # need error response handle func here
 def page_not_found(e):
     full_trace = str(traceback.format_exc())
     return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
