@@ -16,8 +16,6 @@
 
 # В разработке
 
-Метод обработки запроса 'http://127.0.0.1:5000/<rate_key>'
-
 CRUD с HTTP API для валют, записанных в БД (3 дополнительных метода API).
 
 make REST-ful response 404 JSON-log & ObjectId (again)
