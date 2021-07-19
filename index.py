@@ -24,22 +24,19 @@ def index():
 def rate_view(from_rate_key, to_rate_key):
     rates = json_handler(cursor_rates().find_one())
     if from_rate_key and to_rate_key in rates:
-
-        return {
-                    'from': from_rate_key,
-                    'to': to_rate_key,
-                    'value': rates[to_rate_key] / rates[from_rate_key]
-        }
-
+        return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                'response': 200,
+                'rates': {'from': from_rate_key, 'to': to_rate_key, 'value': rates[to_rate_key] / rates[from_rate_key]}
+                }
     else:
-        return {'invalid_data': ''}  # raise here some exception for example
+        return {'invalid_data': ''}  # raise here some exception for example, and handle it
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     full_trace = str(traceback.format_exc())  # need particular func for exception handle
     return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-            'level': 'error', 'traceback': full_trace}, 404
+            'response': 404, 'traceback': full_trace}, 404
 
 
 if __name__ == '__main__':
