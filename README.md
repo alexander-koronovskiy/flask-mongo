@@ -18,9 +18,9 @@
 
 Метод обработки запроса 'http://127.0.0.1:5000/<rate_key>'
 
-Рефрактор JSON-log обработчика response 404
-
 CRUD с HTTP API для валют, записанных в БД (3 дополнительных метода API).
+
+make REST-ful response 404 JSON-log & ObjectId (again)
 
 
 # ТЗ: Flask + MongoDB = <3
