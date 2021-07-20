@@ -16,15 +16,15 @@ def test_rate_view_valid_keys():
            requests.get(f'http://127.0.0.1:5000/{rate_key_2}').json()['rates']
 
 
-def test_rate_view_invalid_key():
+def test_rate_view_invalid_keys():
     assert 'traceback' in requests.get('http://127.0.0.1:5000/доллар').json()
 
 
-def test_rate_convert_valid_key():
+def test_rate_convert_valid_keys():
     from_rate_key = 'EUR'
     to_rate_key = 'USD'
     assert 'rates' in requests.get(f'http://127.0.0.1:5000/{from_rate_key}/{to_rate_key}').json()
 
 
-def test_rate_convert_invalid_key():
+def test_rate_convert_invalid_keys():
     assert 'traceback' in requests.get('http://127.0.0.1:5000/USD/рубль').json()

@@ -25,9 +25,10 @@ def index():
 def rate_view(to_rate_key):
     rates = json_handler(cursor_rates().find_one())
     if to_rate_key in rates:
+        currency = rates[to_rate_key]
         return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
                 'response': 200,
-                'rates': rates  # need handle this
+                'rates': {key: rates[key] / currency for key in rates.keys()}
                 }
     else:
         return abort(404)

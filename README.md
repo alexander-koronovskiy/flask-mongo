@@ -16,12 +16,9 @@
 
 # В разработке
 
-Валидная конвертация других валют в <rate_key> валюту по адресу 'http://127.0.0.1:5000/<rate_key>'
-
 CRUD с HTTP API для валют, записанных в БД (3 дополнительных метода API).
 
 make REST-ful errors and success responses
-
 
 # ТЗ: Flask + MongoDB = <3
 
