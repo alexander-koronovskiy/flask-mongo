@@ -3,12 +3,10 @@ from datetime import datetime
 
 from flask import Flask, abort
 
-from client_handler import convert_all_wrapper, index_wrapper
+from client_handler import convert_all_wrapper, convert_wrapper, index_wrapper
 from db_handler import cursor_rates, del_rates, update_rates
 
 app = Flask(__name__)
-
-# wrappers for all function in index file
 
 
 @app.route('/')
@@ -16,7 +14,7 @@ app = Flask(__name__)
 @app.route('/RUB/')
 def index():
     del_rates()
-    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # add not conn handler here
+    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # add conn failure handler here
     return index_wrapper(cursor_rates().find_one())
 
 
@@ -31,14 +29,10 @@ def convert_all(to_rate_key):
 
 
 @app.route('/<from_rate_key>/<to_rate_key>')
-def rate_convert(from_rate_key, to_rate_key):
-    rates = cursor_rates().find_one()
+def convert(from_rate_key, to_rate_key):
+    rates = cursor_rates().find_one()  # how to add rub rate here without duct tape idk
     if from_rate_key and to_rate_key in rates:
-        return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                'response': 200,
-                'rates': {'from': from_rate_key, 'to': to_rate_key,
-                          'value': rates[to_rate_key] / rates[from_rate_key]}
-                }
+        return convert_wrapper(rates, from_rate_key, to_rate_key)
     else:
         return abort(404)
 
