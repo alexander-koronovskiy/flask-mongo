@@ -3,7 +3,7 @@ from datetime import datetime
 
 from flask import Flask, abort
 
-from client_handler import json_handler
+from client_handler import convert_all_wrapper, index_wrapper
 from db_handler import cursor_rates, del_rates, update_rates
 
 app = Flask(__name__)
@@ -12,29 +12,27 @@ app = Flask(__name__)
 
 
 @app.route('/')
+@app.route('/RUB')
+@app.route('/RUB/')
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # add not conn handler here
-    return json_handler(cursor_rates().find_one())
+    return index_wrapper(cursor_rates().find_one())
 
 
 @app.route('/<to_rate_key>')
 @app.route('/<to_rate_key>/')
-def rate_view(to_rate_key):
-    rates = json_handler(cursor_rates().find_one())
+def convert_all(to_rate_key):
+    rates = cursor_rates().find_one()
     if to_rate_key in rates:
-        currency = rates[to_rate_key]
-        return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-                'response': 200,
-                'rates': {key: rates[key] / currency for key in rates.keys()}
-                }
+        return convert_all_wrapper(rates, to_rate_key)
     else:
         return abort(404)
 
 
 @app.route('/<from_rate_key>/<to_rate_key>')
 def rate_convert(from_rate_key, to_rate_key):
-    rates = json_handler(cursor_rates().find_one())
+    rates = cursor_rates().find_one()
     if from_rate_key and to_rate_key in rates:
         return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
                 'response': 200,

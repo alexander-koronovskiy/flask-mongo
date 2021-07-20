@@ -16,9 +16,7 @@
 
 # В разработке
 
-CRUD с HTTP API для валют, записанных в БД (3 дополнительных метода API).
-
-make REST-ful errors and success responses
+Реализация CRUD с HTTP API для валют, записанных в БД (3 дополнительных метода API).
 
 # ТЗ: Flask + MongoDB = <3
 
