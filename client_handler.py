@@ -1,17 +1,23 @@
 import json
+import traceback
+from datetime import datetime
 
 
-# is that correct serialization objectId (?)
+# index wrapper
 def json_handler(rates: json) -> json:
-    # rates['id'] = str(rates['_id'])
+    _id = str(rates['_id'])
     rates['RUB'] = 1
     del rates['_id']
-    return rates
+    return {'id': _id,
+            'response': 200,
+            'rates': rates,
+            'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+            }
 
 
-def error_response_handler():
+def convert_wrapper():
     pass
 
 
-def success_response_handler():
+def convert_all_wrapper():
     pass
