@@ -16,6 +16,7 @@ def cursor_rates() -> cursor:
 def update_rates(url: str, keyword: str) -> None:
     """rates recording from outside api to db"""
     rates = requests.get(url).json()[keyword]
+    rates['RUB'] = 1
     cursor_rates().insert_one(rates)
 
 

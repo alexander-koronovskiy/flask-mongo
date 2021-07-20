@@ -10,11 +10,9 @@ app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/RUB')
-@app.route('/RUB/')
 def index():
     del_rates()
-    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # add conn failure handler here
+    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
     return index_wrapper(cursor_rates().find_one())
 
 
@@ -30,7 +28,7 @@ def convert_all(to_rate_key):
 
 @app.route('/<from_rate_key>/<to_rate_key>')
 def convert(from_rate_key, to_rate_key):
-    rates = cursor_rates().find_one()  # how to add rub rate here without duct tape idk
+    rates = cursor_rates().find_one()
     if from_rate_key and to_rate_key in rates:
         return convert_wrapper(rates, from_rate_key, to_rate_key)
     else:
@@ -40,9 +38,14 @@ def convert(from_rate_key, to_rate_key):
 @app.errorhandler(404)
 def page_not_found(e):
     full_trace = str(traceback.format_exc())
-    return {'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-            'response': 404, 'traceback': full_trace, 'message': 'wrong rates convert parameters'}, 404
+    return {'message': 'wrong rates convert parameters',
+            'response': 404,
+            'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+            'traceback': full_trace,
+            }, 404
 
+
+# add json handler of conn failure here
 
 if __name__ == '__main__':
     app.run()
