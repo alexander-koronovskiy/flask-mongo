@@ -26,7 +26,6 @@ def convert_all_wrapper(rates: json, to_rate_key: str) -> json:
 
 def convert_wrapper(rates: json, from_rate_key: str, to_rate_key: str) -> json:
     """json response formation for convert method"""
-    _id = str(rates.pop('_id'))
     value = {'from': from_rate_key, 'to': to_rate_key,
              'value': rates[to_rate_key] / rates[from_rate_key]}
-    return wrap_schema(value, _id)
+    return wrap_schema(value, 16)
