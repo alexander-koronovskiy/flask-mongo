@@ -27,11 +27,15 @@ def convert_all(to_rate_key):
         return abort(404)
 
 
-@app.route('/post/<from_rate_key>/<to_rate_key>')  # try to send response to server, db
+@app.route('/<from_rate_key>/<to_rate_key>')  # try to send response to server, db
 def convert(from_rate_key, to_rate_key):
     rates = requests.get('http://127.0.0.1:5000/').json()['rates']
     if from_rate_key and to_rate_key in rates:
-        return convert_wrapper(rates, from_rate_key, to_rate_key)
+
+        convert_format = convert_wrapper(rates, from_rate_key, to_rate_key)
+        # cursor_rates().insert_one(convert_format)
+
+        return convert_format
     else:
         return abort(404)
 
