@@ -2,7 +2,7 @@ import traceback
 from datetime import datetime
 
 import requests
-from flask import Flask, abort
+from flask import Flask, abort, request
 
 from client_handler import convert_all_wrapper, convert_wrapper, index_wrapper
 from db_handler import cursor_rates, del_rates, update_rates
@@ -14,9 +14,6 @@ app = Flask(__name__)
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
-
-    # post response from here
-
     return index_wrapper(cursor_rates().find_one())
 
 
@@ -30,22 +27,10 @@ def convert_all(to_rate_key):
         return abort(404)
 
 
-@app.route('/<from_rate_key>/<to_rate_key>')
-def convert(from_rate_key, to_rate_key):
-
-    # get response here
-    rates = requests.get('http://127.0.0.1:5000/').json()['rates']
-
-    if from_rate_key and to_rate_key in rates:
-        convert_format = convert_wrapper(rates, from_rate_key, to_rate_key)
-
-        # need i record response to db ? this code record data to db success, but server stops work
-        # cursor_rates().insert_one(convert_format)
-
-        return convert_format
-
-    else:
-        return abort(404)
+@app.route('/convert', methods=['POST'])
+def convert():
+    print(request.json.get('key'))
+    return {'result': True}
 
 
 @app.errorhandler(404)
