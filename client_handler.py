@@ -26,6 +26,7 @@ def convert_all_wrapper(rates: json, to_rate_key: str) -> json:
 
 def convert_wrapper(rates: json, from_rate_key: str, to_rate_key: str) -> json:
     """json response formation for convert method"""
-    value = {'id': 1, 'from': from_rate_key, 'to': to_rate_key,
-             'value': rates[to_rate_key] / rates[from_rate_key]}
+    value = {'rates': {'from': from_rate_key, 'to': to_rate_key,
+             'value': rates[to_rate_key] / rates[from_rate_key]},
+             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
     return value
