@@ -1,3 +1,4 @@
+import json
 import traceback
 from datetime import datetime
 
@@ -29,8 +30,11 @@ def convert_all(to_rate_key):
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    print(request.json.get('key'))
-    return {'result': True}
+    from_rate_key = request.json.get('from')
+    to_rate_key = request.json.get('to')
+    origin_val = request.json.get('value')
+
+    return {'origin data': [from_rate_key, to_rate_key, origin_val]}
 
 
 @app.errorhandler(404)
