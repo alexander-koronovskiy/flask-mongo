@@ -12,6 +12,7 @@ def test_convert_valid_single_json():
             'value': 50
         })
         assert response.status_code == 200
+        assert 'convert' in response.get_json()
 
 
 def test_convert_invalid_key():
@@ -23,6 +24,7 @@ def test_convert_invalid_key():
             'value': 50
         })
         assert response.status_code == 200
+        assert 'message' in response.get_json()
 
 
 def test_convert_invalid_value():
@@ -34,6 +36,7 @@ def test_convert_invalid_value():
             'value': 20
         })
         assert response.status_code == 200
+        assert 'message' in response.get_json()
 
 
 def test_convert_valid_plural_json():
