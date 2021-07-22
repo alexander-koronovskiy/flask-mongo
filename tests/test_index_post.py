@@ -22,7 +22,7 @@ def test_convert_invalid_key():
             'to': 'eur',
             'value': 50
         })
-        assert response.status_code == 400
+        assert response.status_code == 200
 
 
 def test_convert_invalid_value():
@@ -33,7 +33,7 @@ def test_convert_invalid_value():
             'to': 'eur',
             'value': 20
         })
-        assert response.status_code == 400
+        assert response.status_code == 200
 
 
 def test_convert_valid_plural_json():

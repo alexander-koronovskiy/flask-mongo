@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     del_rates()
-    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # not conn wrap
+    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
     return index_wrapper(cursor_rates().find_one())
 
 
@@ -27,8 +27,6 @@ def convert_all(to_rate_key):
         return abort(404)
 
 
-# handle plural json cases mb in cycles, refract that overcode - it s non pythonic
-
 @app.route('/convert', methods=['POST'])
 def convert():
     result = {}
@@ -37,7 +35,7 @@ def convert():
         to_rate_key = request.json.get('to')
         origin_val = request.json.get('value')
     except KeyError:
-        abort(400)
+        abort(500)
     else:
         if from_rate_key and to_rate_key:
             from_rate_key = from_rate_key.upper()
@@ -47,7 +45,8 @@ def convert():
             result = {'ur cash': {from_rate_key: origin_val},
                       'convert': {to_rate_key: origin_val * rates[to_rate_key] / rates[from_rate_key]}}
         else:
-            abort(400)
+            abort(500)
+
     return result
 
 
