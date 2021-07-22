@@ -54,9 +54,9 @@ def convert():
 @app.errorhandler(400)
 @app.errorhandler(404)
 @app.errorhandler(500)
-def page_not_found(e):
+def error_handler(e):
     full_trace = str(traceback.format_exc())
-    return {'message': 'wrong rates convert parameters',
+    return {'message': 'wrong rates convert parameters or app internal error',
             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
             'traceback': full_trace,
             }
