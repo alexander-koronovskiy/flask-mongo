@@ -10,13 +10,10 @@ from db_handler import cursor_rates, del_rates, update_rates
 app = Flask(__name__)
 
 
-# add a connection error and status 500 handlers
-# refract error handlers and convert method
-
 @app.route('/', methods=['POST', 'GET'])
 def index():
     del_rates()
-    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
+    update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')  # not conn wrap
     return index_wrapper(cursor_rates().find_one())
 
 
@@ -30,11 +27,10 @@ def convert_all(to_rate_key):
         return abort(404)
 
 
+# handle plural json cases mb in cycles, refract that overcode - it s non pythonic
+
 @app.route('/convert', methods=['POST'])
 def convert():
-
-    # handle many json cases mb in cycles, refract that overcode - it s non pythonic
-
     result = {}
     try:
         from_rate_key = request.json.get('from')
@@ -52,17 +48,20 @@ def convert():
                       'convert': {to_rate_key: origin_val * rates[to_rate_key] / rates[from_rate_key]}}
         else:
             abort(400)
-
     return result
 
 
+# refract error handlers and convert method
+
+@app.errorhandler(400)
 @app.errorhandler(404)
+@app.errorhandler(500)
 def page_not_found(e):
     full_trace = str(traceback.format_exc())
     return {'message': 'wrong rates convert parameters',
             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
             'traceback': full_trace,
-            }, 404
+            }
 
 
 if __name__ == '__main__':
