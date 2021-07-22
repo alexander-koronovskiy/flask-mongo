@@ -1,14 +1,17 @@
-import requests
+import index
+
+# i m test without func-template for code reduct of testing
 
 
 def test_convert_valid_single_json():
-    data = {
-        'from': 'usd',
-        'to': 'eur',
-        'value': 50
-    }
-    print(requests.post('http://127.0.0.1:5000/convert', data=data))
-    assert True
+    index.app.config['TESTING'] = True
+    with index.app.test_client() as client:
+        response = client.post('/convert', json={
+            'from': 'usd',
+            'to': 'eur',
+            'value': 50
+        })
+        assert response.status_code == 200
 
 
 def test_convert_invalid_key():
