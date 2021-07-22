@@ -1,10 +1,11 @@
-import json
+# python libs
 import traceback
 from datetime import datetime
 
-import requests
+# libs from requirements
 from flask import Flask, abort, request
 
+# my libs
 from client_handler import convert_all_wrapper, convert_wrapper, index_wrapper
 from db_handler import cursor_rates, del_rates, update_rates
 
@@ -16,6 +17,7 @@ def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
     return index_wrapper(cursor_rates().find_one())
+    # add a connection error handler
 
 
 @app.route('/<to_rate_key>', methods=['GET'])
@@ -25,23 +27,31 @@ def convert_all(to_rate_key):
     if to_rate_key in rates:
         return convert_all_wrapper(rates, to_rate_key)
     else:
-        return abort(404)
+        return abort(404)  # reformat page not found handler
 
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    from_rate_key = request.json.get('from')
-    to_rate_key = request.json.get('to')
+
+    # idk how to refract that code
+
+    from_rate_key = request.json.get('from').upper()
+    to_rate_key = request.json.get('to').upper()
     origin_val = request.json.get('value')
 
-    return {'origin data': [from_rate_key, to_rate_key, origin_val]}
+    # key error and value_error handle, uppercase key mod here
+
+    rates = convert_wrapper(cursor_rates().find_one())
+    return {from_rate_key: origin_val,
+            to_rate_key: origin_val * rates[from_rate_key] / rates[to_rate_key]}
+
+    # add 405 handler
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     full_trace = str(traceback.format_exc())
     return {'message': 'wrong rates convert parameters',
-            'response': 404,
             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
             'traceback': full_trace,
             }, 404

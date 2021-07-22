@@ -4,7 +4,6 @@ from datetime import datetime
 
 def wrap_schema(value: dict, id: str) -> dict:
     return {'id': id,
-            'response': 200,
             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
             'rates': value,
             }
@@ -24,9 +23,6 @@ def convert_all_wrapper(rates: json, to_rate_key: str) -> json:
     return wrap_schema(value, _id)
 
 
-def convert_wrapper(rates: json, from_rate_key: str, to_rate_key: str) -> json:
+def convert_wrapper(rates: json) -> json:
     """json response formation for convert method"""
-    value = {'rates': {'from': from_rate_key, 'to': to_rate_key,
-             'value': rates[to_rate_key] / rates[from_rate_key]},
-             'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
-    return value
+    return index_wrapper(rates)['rates']
