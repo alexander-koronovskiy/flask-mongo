@@ -33,18 +33,20 @@ def convert_all(to_rate_key):
 @app.route('/convert', methods=['POST'])
 def convert():
 
-    # idk how to refract that code
-
+    # check that not empty
     from_rate_key = request.json.get('from').upper()
     to_rate_key = request.json.get('to').upper()
     origin_val = request.json.get('value')
 
+    # handle keys
+
     # key error and value_error handle, uppercase key mod here
 
     rates = convert_wrapper(cursor_rates().find_one())
-    return {from_rate_key: origin_val,
-            to_rate_key: origin_val * rates[from_rate_key] / rates[to_rate_key]}
+    return {'ur cash': {from_rate_key: origin_val},
+            'convert': {to_rate_key: origin_val * rates[to_rate_key] / rates[from_rate_key]}}
 
+    # how to handle many cases
     # add 405 handler
 
 
