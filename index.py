@@ -1,4 +1,3 @@
-import traceback
 from datetime import datetime
 
 from flask import Flask, abort, json, request
@@ -28,14 +27,17 @@ def convert_all(to_rate_key):
 
 
 # yaaaay i understood how i may organise err handle now
-@app.route('/summary')
 def summary():
-    data = {'hello': 'kitty'}
+
+    data = {'message': 'wrong rates convert parameters or app internal error',
+            'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
+
     response = app.response_class(
-        response=json.dumps(data),  # why it doesnt work without dumbs
+        response=json.dumps(data),  # why it going wrong without json dumps, i don t get it
         status=500,
         mimetype='application/json'
     )
+
     return response
 
 
@@ -69,12 +71,7 @@ def convert():
 @app.errorhandler(404)
 @app.errorhandler(500)
 def error_handler(e):
-    print(e)
-    full_trace = str(traceback.format_exc())
-    return {'message': 'wrong rates convert parameters or app internal error',
-            'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
-            'traceback': full_trace,
-            }
+    return summary()
 
 
 if __name__ == '__main__':

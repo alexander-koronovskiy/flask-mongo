@@ -6,7 +6,7 @@ def test_index():
 
 
 def test_page_not_found():
-    assert 'traceback' in requests.get('http://127.0.0.1:5000/USD/info').json()
+    assert 'message' in requests.get('http://127.0.0.1:5000/USD/info').json()
 
 
 def test_rate_view_valid_keys():
@@ -17,4 +17,4 @@ def test_rate_view_valid_keys():
 
 
 def test_rate_view_invalid_keys():
-    assert 'traceback' in requests.get('http://127.0.0.1:5000/доллар').json()
+    assert 'message' in requests.get('http://127.0.0.1:5000/доллар').json()
