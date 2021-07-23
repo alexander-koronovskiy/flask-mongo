@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+import flask
+
 
 def wrap_schema(value: dict, id: str) -> dict:
     return {'id': id,
@@ -26,3 +28,15 @@ def convert_all_wrapper(rates: json, to_rate_key: str) -> json:
 def convert_wrapper(rates: json) -> json:
     """json response formation for convert method"""
     return index_wrapper(rates)['rates']
+
+
+def summary(app: flask.app, resp_code: int):
+    data = {'message': 'wrong rates convert parameters or app internal error',
+            'timestamp': datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
+    print(type(app))
+    response = app.response_class(
+        response=json.dumps(data),  # why it going wrong without json dumps, i don t get it
+        status=resp_code,
+        mimetype='application/json'
+    )
+    return response
