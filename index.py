@@ -1,6 +1,11 @@
 from flask import Flask, abort, request
 
-from client_handler import convert_all_wrapper, convert_wrapper, index_wrapper, summary
+from client_handler import (
+    convert_all_wrapper,
+    convert_wrapper,
+    err_json_report,
+    index_wrapper,
+)
 from db_handler import cursor_rates, del_rates, update_rates
 
 app = Flask(__name__)
@@ -36,10 +41,10 @@ def convert():
         if from_rate_key and to_rate_key:
             from_rate_key = from_rate_key.upper()
             to_rate_key = to_rate_key.upper()
-
-            rates = convert_wrapper(cursor_rates().find_one())
-            result = {'ur cash': {from_rate_key: origin_val},
-                      'convert': {to_rate_key: origin_val * rates[to_rate_key] / rates[from_rate_key]}}
+            result = convert_wrapper(rates=cursor_rates().find_one(),
+                                     from_=from_rate_key,
+                                     to_=to_rate_key,
+                                     value_=origin_val)
         else:
             abort(500)
     return result
@@ -49,8 +54,8 @@ def convert():
 @app.errorhandler(404)
 @app.errorhandler(500)
 def error_handler(e):
-    resp_code = int(e.get_response().status[:3])  # it s just insulat tape
-    return summary(app, resp_code)
+    resp_code = int(e.get_response().status[:3])  # how i can handle that on another ways (?)
+    return err_json_report(app, resp_code)
 
 
 if __name__ == '__main__':
