@@ -1,6 +1,7 @@
 import index
 
-# i m test without func-template for code reduct of testing
+# handle empty responses, key error
+# testing func schema realise
 
 
 def test_convert_valid_single_json():
@@ -11,7 +12,6 @@ def test_convert_valid_single_json():
             'to': 'eur',
             'value': 50
         })
-        assert response.status_code == 200
         assert 'convert' in response.get_json()
 
 
@@ -23,25 +23,15 @@ def test_convert_invalid_key():
             'to': 'eur',
             'value': 50
         })
-        assert response.status_code == 500
-        assert 'message' in response.get_json()
+        assert not response.get_json()  # empty here
 
 
 def test_convert_invalid_value():
     index.app.config['TESTING'] = True
     with index.app.test_client() as client:
         response = client.post('/convert', json={
-            'fr': 'usd',
+            'from': 'usduuu',
             'to': 'eur',
-            'value': 20
+            'value': 707
         })
-        assert response.status_code == 500
-        assert 'message' in response.get_json()
-
-
-def test_convert_valid_plural_json():
-    pass
-
-
-def test_convert_invalid_case_in_plural_json():
-    pass
+        assert 'message' in response.get_json()  # key error here

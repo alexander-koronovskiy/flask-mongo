@@ -24,29 +24,24 @@ def convert_all(to_rate_key):
     rates = cursor_rates().find_one()
     if to_rate_key in rates:
         return convert_all_wrapper(rates, to_rate_key)
-    else:
-        return abort(404)
 
 
 @app.route('/convert', methods=['POST'])
 def convert():
     result = {}
-    try:
-        from_rate_key = request.json.get('from')
-        to_rate_key = request.json.get('to')
-        origin_val = request.json.get('value')
-    except KeyError:
-        abort(500)
-    else:
-        if from_rate_key and to_rate_key:
-            from_rate_key = from_rate_key.upper()
-            to_rate_key = to_rate_key.upper()
-            result = convert_wrapper(rates=cursor_rates().find_one(),
-                                     from_=from_rate_key,
-                                     to_=to_rate_key,
-                                     value_=origin_val)
-        else:
-            abort(500)
+
+    from_rate_key = request.json.get('from')
+    to_rate_key = request.json.get('to')
+    origin_val = request.json.get('value')
+
+    if from_rate_key and to_rate_key:
+        from_rate_key = from_rate_key.upper()
+        to_rate_key = to_rate_key.upper()
+        result = convert_wrapper(rates=cursor_rates().find_one(),
+                                 from_=from_rate_key,
+                                 to_=to_rate_key,
+                                 value_=origin_val)
+
     return result
 
 
