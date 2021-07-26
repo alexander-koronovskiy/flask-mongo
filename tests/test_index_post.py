@@ -1,37 +1,28 @@
+import json
+
 import index
 
-# handle empty responses, key error
-# testing func schema realise
+valid_json = {'from': 'rub', 'to': 'eur', 'value': 50}
+invalid_key = {'fr%%%': 'usd', 'to': 'eur', 'value': 50}
+invalid_value = {'from': 'usduuu', 'to': 'eur', 'value': 707}
 
 
-def test_convert_valid_single_json():
+def testing_func_schema(req: json) -> json:
     index.app.config['TESTING'] = True
     with index.app.test_client() as client:
-        response = client.post('/convert', json={
-            'from': 'usd',
-            'to': 'eur',
-            'value': 50
-        })
-        assert 'convert' in response.get_json()
+        response = client.post('/convert', json=req)
+    return response
+
+
+def test_convert_valid_json():
+    assert 'convert' in testing_func_schema(valid_json).get_json()
 
 
 def test_convert_invalid_key():
-    index.app.config['TESTING'] = True
-    with index.app.test_client() as client:
-        response = client.post('/convert', json={
-            'fr%%%': 'usd',
-            'to': 'eur',
-            'value': 50
-        })
-        assert not response.get_json()  # empty here
+    assert not testing_func_schema(invalid_key).get_json()  # empty here
 
 
 def test_convert_invalid_value():
-    index.app.config['TESTING'] = True
-    with index.app.test_client() as client:
-        response = client.post('/convert', json={
-            'from': 'usduuu',
-            'to': 'eur',
-            'value': 707
-        })
-        assert 'message' in response.get_json()  # key error here
+    assert 'message' in testing_func_schema(invalid_value).get_json()  # key error here
+
+# handle empty responses, key error, logic sep in client handler
