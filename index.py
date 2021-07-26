@@ -24,16 +24,16 @@ def convert_all(to_rate_key):
     rates = cursor_rates().find_one()
     if to_rate_key in rates:
         return convert_all_wrapper(rates, to_rate_key)
+    abort(404)
 
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    result = {}
+    result = err_json_report(app, 400)
 
     from_rate_key = request.json.get('from')
     to_rate_key = request.json.get('to')
     origin_val = request.json.get('value')
-    print(from_rate_key, to_rate_key, origin_val)
 
     if from_rate_key and to_rate_key and origin_val:
         from_rate_key = from_rate_key.upper()
@@ -46,6 +46,7 @@ def convert():
     return result
 
 
+# add err global handler here
 @app.errorhandler(400)
 @app.errorhandler(404)
 @app.errorhandler(500)
@@ -55,4 +56,4 @@ def error_handler(e):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run()  # add logic sep in client handler

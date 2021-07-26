@@ -1,20 +1,22 @@
-import requests
+import json
+
+import index
+
+
+def _func_schema(path: str) -> json:
+    index.app.config['TESTING'] = True
+    with index.app.test_client() as client:
+        response = client.get(path, follow_redirects=True)
+    return response.get_json()
 
 
 def test_index():
-    assert requests.get('http://127.0.0.1:5000/').json()
+    assert 'rates' in _func_schema('/USD')
 
 
 def test_page_not_found():
-    assert 'message' in requests.get('http://127.0.0.1:5000/USD/info').json()
+    assert 'message' in _func_schema('/tttt')
 
 
-def test_rate_view_valid_keys():
-    rate_key_1 = 'RUB'
-    rate_key_2 = 'USD'
-    assert not requests.get(f'http://127.0.0.1:5000/{rate_key_1}').json()['rates'] == \
-           requests.get(f'http://127.0.0.1:5000/{rate_key_2}').json()['rates']
-
-
-def test_rate_view_invalid_keys():
-    assert 'message' in requests.get('http://127.0.0.1:5000/доллар').json()
+def test_rate_view_valid_key():
+    assert 'rates' in _func_schema('/USD')
