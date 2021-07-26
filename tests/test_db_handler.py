@@ -1,4 +1,4 @@
-from db_handler import cursor_rates, db_conn, del_rates, update_rates
+from handler_db import cursor_rates, db_conn, del_rates, update_rates
 
 PREV_COUNT = cursor_rates().count()
 

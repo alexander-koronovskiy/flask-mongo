@@ -1,12 +1,9 @@
 from flask import Flask, abort, request
 
-from client_handler import (
-    convert_all_wrapper,
-    convert_wrapper,
-    err_json_report,
-    index_wrapper,
-)
-from db_handler import cursor_rates, del_rates, update_rates
+from handler_db import cursor_rates, del_rates, update_rates
+from handler_err import err_json_report
+from handler_get import convert_all_wrapper, index_wrapper
+from handler_post import convert_wrapper
 
 app = Flask(__name__)
 
@@ -56,4 +53,4 @@ def error_handler(e):
 
 
 if __name__ == '__main__':
-    app.run()  # add logic sep in client handler
+    app.run()
