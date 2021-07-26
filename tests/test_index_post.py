@@ -25,4 +25,5 @@ def test_convert_invalid_key():
 def test_convert_invalid_value():
     assert 'message' in testing_func_schema(invalid_value).get_json()  # key error here
 
-# handle empty responses, key error, logic sep in client handler
+# handle empty responses, key error, logic sep in client handler,
+# fix resp in index tests file

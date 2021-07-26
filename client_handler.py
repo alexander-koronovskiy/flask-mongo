@@ -29,8 +29,11 @@ def convert_all_wrapper(rates: json, to_rate_key: str) -> json:
 def convert_wrapper(rates: json, from_: str, to_: str, value_: str) -> json:
     """json response formation for convert method"""
     rates = index_wrapper(rates)['rates']
-    return {'ur cash': {from_: value_},
-            'convert': {to_: value_ * rates[to_] / rates[from_]}}
+    try:
+        result = value_ * rates[to_] / rates[from_]
+    except KeyError:
+        result = 'wrong converter parameters'
+    return {'ur cash': {from_: value_}, 'convert': {to_: result}}
 
 
 def err_json_report(app: flask.app, resp_code: int):  # this method must returns Flask Response Object

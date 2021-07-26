@@ -33,8 +33,9 @@ def convert():
     from_rate_key = request.json.get('from')
     to_rate_key = request.json.get('to')
     origin_val = request.json.get('value')
+    print(from_rate_key, to_rate_key, origin_val)
 
-    if from_rate_key and to_rate_key:
+    if from_rate_key and to_rate_key and origin_val:
         from_rate_key = from_rate_key.upper()
         to_rate_key = to_rate_key.upper()
         result = convert_wrapper(rates=cursor_rates().find_one(),
