@@ -50,4 +50,3 @@ def convert():
 
 if __name__ == '__main__':
     app.run()
-    flask_restful.got_request_exception.connect(log_exception, app)
