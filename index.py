@@ -10,30 +10,9 @@ app = Flask(__name__)
 api = flask_restful.Api(app, catch_all_404s=True)
 
 
-# !!!!!!!!!!!!!!!!!!! THIS CODE FOR ERR HANDLER
-
-
 def log_exception(sender, exception, **extra):
     """ Log an exception to our logging framework """
     sender.logger.debug('Got exception during processing: %s', exception)
-
-
-flask_restful.got_request_exception.connect(log_exception, app)
-
-
-errors = {
-    'PageNotFound': {
-        'message': 'A user with that username already exists.',
-        'status': 404,
-    },
-    'ResourceDoesNotExist': {
-        'message': 'A resource with that ID no longer exists.',
-        'status': 410,
-        'extra': 'Any extra information you want.',
-    },
-}
-
-# !!!!!!!!!!!!!!!!!!!
 
 
 @app.route('/', methods=['GET'])
@@ -73,3 +52,4 @@ def convert():
 
 if __name__ == '__main__':
     app.run()
+    flask_restful.got_request_exception.connect(log_exception, app)
