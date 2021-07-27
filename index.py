@@ -1,4 +1,3 @@
-import flask_restful
 from flask import Flask, abort, request
 
 from handler_db import cursor_rates, del_rates, update_rates
@@ -7,12 +6,6 @@ from handler_get import convert_all_wrapper, index_wrapper
 from handler_post import convert_wrapper
 
 app = Flask(__name__)
-api = flask_restful.Api(app, catch_all_404s=True)
-
-
-def log_exception(sender, exception, **extra):
-    """ Log an exception to our logging framework """
-    sender.logger.debug('Got exception during processing: %s', exception)
 
 
 @app.route('/', methods=['GET'])
@@ -29,6 +22,11 @@ def convert_all(to_rate_key):
     if to_rate_key in rates:
         return convert_all_wrapper(rates, to_rate_key.upper())
     abort(404)
+
+
+@app.errorhandler(404)  # it s just a adhesive tape
+def page_not_found(e):
+    return err_json_report(app, 404)
 
 
 @app.route('/convert', methods=['POST'])
