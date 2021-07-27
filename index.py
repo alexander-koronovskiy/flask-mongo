@@ -27,7 +27,7 @@ def index():
 def convert_all(to_rate_key):
     rates = cursor_rates().find_one()
     if to_rate_key in rates:
-        return convert_all_wrapper(rates, to_rate_key)
+        return convert_all_wrapper(rates, to_rate_key.upper())
     abort(404)
 
 
