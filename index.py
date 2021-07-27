@@ -1,3 +1,4 @@
+import flask_restful
 from flask import Flask, abort, request
 
 from handler_db import cursor_rates, del_rates, update_rates
@@ -6,9 +7,36 @@ from handler_get import convert_all_wrapper, index_wrapper
 from handler_post import convert_wrapper
 
 app = Flask(__name__)
+api = flask_restful.Api(app, catch_all_404s=True)
 
 
-@app.route('/', methods=['POST', 'GET'])
+# !!!!!!!!!!!!!!!!!!! THIS CODE FOR ERR HANDLER
+
+
+def log_exception(sender, exception, **extra):
+    """ Log an exception to our logging framework """
+    sender.logger.debug('Got exception during processing: %s', exception)
+
+
+flask_restful.got_request_exception.connect(log_exception, app)
+
+
+errors = {
+    'PageNotFound': {
+        'message': 'A user with that username already exists.',
+        'status': 404,
+    },
+    'ResourceDoesNotExist': {
+        'message': 'A resource with that ID no longer exists.',
+        'status': 410,
+        'extra': 'Any extra information you want.',
+    },
+}
+
+# !!!!!!!!!!!!!!!!!!!
+
+
+@app.route('/', methods=['GET'])
 def index():
     del_rates()
     update_rates('https://www.cbr-xml-daily.ru/latest.js', 'rates')
@@ -41,15 +69,6 @@ def convert():
                                  value_=origin_val)
 
     return result
-
-
-# add err global handler here
-@app.errorhandler(400)
-@app.errorhandler(404)
-@app.errorhandler(500)
-def error_handler(e):
-    resp_code = int(e.get_response().status[:3])  # how i can handle that on another ways (?)
-    return err_json_report(app, resp_code)
 
 
 if __name__ == '__main__':
